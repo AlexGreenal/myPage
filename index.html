@@ -1,0 +1,278 @@
+<!doctype html>
+<html lang="zh">
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"> 
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Alex的搜索主页</title>
+	<link rel="stylesheet" type="text/css" href="css/default.css">
+	<script src="js/stopExecutionOnTimeout.js?t=1"></script>
+	<script src="js/jquery-1.11.0.min.js"></script>
+	<style type="text/css">
+		
+	*, *:before, *:after {
+	  box-sizing: border-box;
+	  margin: 0;
+	  padding: 0;
+	}
+
+	html, body {
+	  font-size: 62.5%;
+	  height: 100%;
+	}
+
+	body {
+		/*
+		margin:0;
+		background:url("src/img.jpeg") no-repeat;
+		background-size:100% 100%;
+		*/
+		
+		background: #007991;
+        background: -webkit-linear-gradient(#78ffd6, #007991);
+        background: -o-linear-gradient(#78ffd6, #007991);
+        background: linear-gradient(#78ffd6, #007991);
+		
+	}
+		
+	svg {
+	  overflow: visible;
+	}
+	.button{
+	  position: absolute;
+	  top: 50%;
+	  left: 50%;
+	  margin-left: 18rem;
+	  margin-top:  -2.8rem;
+	  width: 32rem;
+	  height: 7rem;
+	}
+	.search {
+	  position: absolute;
+	  top: 50%;
+	  left: 50%;
+	  margin-left: -16rem;
+	  margin-top: -3.5rem;
+	  width: 32rem;
+	  height: 7rem;
+	}
+	.search:not(.active) {
+	  cursor: pointer;
+	}
+
+	.search-svg {
+	  position: absolute;
+	  top: 0;
+	  left: 0;
+	  width: 100%;
+	  height: 100%;
+	}
+	.search-svg__path {
+	  fill: none;
+	  stroke: #fff;
+	  stroke-width: 6px;
+	}
+
+	.search-input {
+	  position: relative;
+	  width: 27rem;
+	  height: 6rem;
+	  padding: 1.2rem 0 1.2rem 2.5rem;
+	  background: transparent;
+	  outline: none;
+	  border: none;
+	  font-size: 3.6rem;
+	  color: #fff;
+	  z-index: -1;
+	  opacity: 0;
+	  -webkit-transition: opacity 0.2s;
+	          transition: opacity 0.2s;
+	}
+	.search-input.visible {
+	  z-index: auto;
+	  opacity: 1;
+	}
+
+	.search-close {
+	  position: absolute;
+	  top: 1.5rem;
+	  right: 1.5rem;
+	  width: 3rem;
+	  height: 3rem;
+	  cursor: pointer;
+	  z-index: -1;
+	}
+	.search-close.visible {
+	  z-index: auto;
+	}
+	.search-close.visible:before {
+	  -webkit-transform: rotate(-45deg);
+	      -ms-transform: rotate(-45deg);
+	          transform: rotate(-45deg);
+	  opacity: 1;
+	  -webkit-transition: -webkit-transform 0.2s cubic-bezier(0.73, 0.14, 0.4, 1.58), opacity 0.1s;
+	          transition: transform 0.2s cubic-bezier(0.73, 0.14, 0.4, 1.58), opacity 0.1s;
+	}
+	.search-close.visible:after {
+	  -webkit-transform: rotate(45deg);
+	      -ms-transform: rotate(45deg);
+	          transform: rotate(45deg);
+	  opacity: 1;
+	  -webkit-transition: -webkit-transform 0.2s 0.2s cubic-bezier(0.73, 0.14, 0.4, 1.58), opacity 0.1s 0.2s;
+	          transition: transform 0.2s 0.2s cubic-bezier(0.73, 0.14, 0.4, 1.58), opacity 0.1s 0.2s;
+	}
+	.search-close:before, .search-close:after {
+	  content: "";
+	  position: absolute;
+	  top: 1.2rem;
+	  left: 0;
+	  width: 100%;
+	  height: 0.6rem;
+	  background: #fff;
+	  border-radius: 0.5rem;
+	  opacity: 0;
+	}
+	.search-close:before {
+	  -webkit-transform: rotate(-45deg) translateX(2rem);
+	      -ms-transform: rotate(-45deg) translateX(2rem);
+	          transform: rotate(-45deg) translateX(2rem);
+	  -webkit-transition: -webkit-transform 0.2s, opacity 0.1s 0.1s;
+	          transition: transform 0.2s, opacity 0.1s 0.1s;
+	}
+	.search-close:after {
+	  -webkit-transform: rotate(45deg) translateX(2rem);
+	      -ms-transform: rotate(45deg) translateX(2rem);
+	          transform: rotate(45deg) translateX(2rem);
+	  -webkit-transition: -webkit-transform 0.2s 0.2s, opacity 0.1s 0.3s;
+	          transition: transform 0.2s 0.2s, opacity 0.1s 0.3s;
+	}
+	</style>
+	
+	<script type="text/javascript">
+		function alphaPlay(obj,method){ 
+			var n = (method == "show") ? 0 : 100,
+			ie = (window.ActiveXObject) ? true : false;
+			var time = setInterval(function(){
+				if(method == "show"){
+					if(n < 100){
+						n+=10;
+						if(ie){
+							obj.style.cssText = "filter:alpha(opacity="+n+")";
+						}else{
+							(n==100) ? obj.style.opacity = 1 : obj.style.opacity = "0."+n;
+						}
+					}else{
+						clearTimeout(time);
+					}
+				}else{
+					if(n > 0){
+						n-=10;
+						if(ie){
+							obj.style.cssText = "filter:alpha(opacity="+n+")";
+						}else{
+							obj.style.opacity = "0."+n;
+						}
+					}else{
+						clearTimeout(time);
+					}
+				}
+			},30);
+		}	
+	</script>
+	<script type="text/javascript">
+		window.onload=function(){
+			var buff = document.getElementById("buttondiv");
+			alphaPlay(buff,"hidden");
+		}
+		function go(){
+			var v=document.getElementById("inputbox");
+			if(v.value == "关于作者"){
+				alert("powered by Alex Greenall\n2020.06.27\n使用搜索引擎：百度（更改选项敬请期待）\n源码下载：请到开发者工具中下载");	
+			}else if(v.value == "使用方法"){
+				alert("单击叉号清空搜索框内容，双击叉号收起搜索框\n选择选项后点击Go 按钮即可进入相应设置（未上线）");
+			}else{
+				location.href="http://www.baidu.com/baidu?wd="+v.value;
+				v.value="";
+				document.querySelector('.type-ahead__suggestions').classList.add('hidden');
+			}
+		}
+		
+		function key(){
+    		if(event.keyCode==13){
+				go();
+			}   
+		}
+		/*$(function(){
+    		$('.search-input').bind('input propertychange',function(){
+        	var object = $(this);
+        	var text_length = object.val().length;  
+        	var width = parseInt(text_length)*12;
+        	object.css('width',width+'px');
+    	});
+	})*/
+	</script>
+</head>
+<body>
+	<div class="htmleaf-container">
+			<div class="search">
+			  <svg class="search-svg" viewBox="0 0 320 70"
+			       data-init="M160,3 L160,3 a27,27 0 0,1 0,54 L160,57 a27,27 0 0,1 0,-54 M197,67 181.21,51.21"
+			       data-mid="M160,3 L160,3 a27,27 0 0,1 0,54 L160,57 a27,27 0 0,1 0,-54 M179.5,49.5 179.5,49.5"
+			       data-active="M27,3 L293,3 a27,27 0 0,1 0,54 L27,57 a27,27 0 0,1 0,-54 M179.5,49.5 179.5,49.5">
+			    <path class="search-svg__path" d="M160,3 L160,3 a27,27 0 0,1 0,54 L160,57 a27,27 0 0,1 0,-54 M197,67 181.21,51.21" />
+			  </svg>
+			  <input type="text" class="search-input" id="inputbox" onKeyPress="key();" />
+				<ul class="type-ahead__suggestions hidden"></ul>
+			  <div class="search-close"></div>
+			</div>
+		<div class="button" id="buttondiv"><input type="button" value="Go" style="background: #FFFFFF; color: dimgray; width: 50px; height: 50px; border-radius: 50%; border: none" onclick="go()"></div>
+	</div>
+	
+	<script type="text/javascript" src="js/snap.svg-min.js"></script>
+	<script>
+	$(document).ready(function () {
+	    var $button = $('.button'), $search = $('.search'), $input = $('.search-input'), $close = $('.search-close'), $svg = $('.search-svg'), $path = $('.search-svg__path')[0], initD = $svg.data('init'), midD = $svg.data('mid'), finalD = $svg.data('active'), backDelay = 400, midAnim = 200, bigAnim = 400, animating = false;
+	    $(document).on('click', '.search:not(.active)', function () {
+	        if (animating)
+	            return;
+	        animating = true;
+	        $search.addClass('active');
+	        Snap($path).animate({ 'path': midD }, midAnim, mina.backin, function () {
+	            Snap($path).animate({ 'path': finalD }, bigAnim, mina.easeinout, function () {
+	                $input.addClass('visible');
+	                $input.focus();
+	                $close.addClass('visible');
+	                animating = false;
+	            });
+	        });
+			var a = document.getElementById("buttondiv");
+			alphaPlay(a,"show");
+	    });
+		$(document).on('click','.search-close',function(){
+			$input.val("");
+			document.querySelector('.type-ahead__suggestions').classList.add('hidden');
+			document.getElementById("inputbox").focus();
+		})
+		
+	    $(document).dblclick('.search-close', function () {
+	        if (animating)
+	            return;
+	        animating = true;		
+	        $input.removeClass('visible');
+	        $close.removeClass('visible');
+	        $search.removeClass('active');
+	        setTimeout(function () {
+	            Snap($path).animate({ 'path': midD }, bigAnim, mina.easeinout, function () {
+	                Snap($path).animate({ 'path': initD }, midAnim, mina.easeinout, function () {
+	                    animating = false;
+	                });
+	            });
+	        }, backDelay);
+			var b = document.getElementById("buttondiv");
+			alphaPlay(b,"hidden");
+	    });
+	});
+	</script>
+	<script type="text/javascript" src="js/script.js"></script>
+</body>
+</html>
